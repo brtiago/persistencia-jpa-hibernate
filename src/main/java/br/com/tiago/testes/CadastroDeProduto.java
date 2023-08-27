@@ -1,9 +1,9 @@
 package br.com.tiago.testes;
 
+import br.com.tiago.dao.ProdutoDao;
 import br.com.tiago.modelo.Produto;
+import br.com.tiago.util.JPAUtil;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
 import java.math.BigDecimal;
 
@@ -14,11 +14,11 @@ public class CadastroDeProduto {
         celular.setDescricao("Muito legal");
         celular.setPreco(new BigDecimal(800));
 
-        EntityManagerFactory factory = Persistence
-                .createEntityManagerFactory("loja");
-        EntityManager em = factory.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
+        ProdutoDao dao = new ProdutoDao(em);
+
         em.getTransaction().begin();
-        em.persist(celular);
+        dao.cadastrar(celular);
         em.getTransaction().commit();
         em.close();
     }
