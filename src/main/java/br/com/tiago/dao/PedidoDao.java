@@ -33,17 +33,22 @@ public class PedidoDao {
     public List<RelatorioDeVendasVo> relatorioDeVendasVo() {
         String jpql = "SELECT new br.com.tiago.vo.RelatorioDeVendasVo("
                 + "produto.nome, "
-                + "SUM(item.quantidade) as quantidadeTotal, "
+                + "SUM(item.quantidade), "
                 + "MAX(pedido.data)) "
                 + "FROM Pedido pedido "
                 + "JOIN pedido.itens item "
                 + "JOIN item.produto produto "
                 + "GROUP BY produto.nome "
-                + "ORDER BY quantidadeTotal DESC";
+                + "ORDER BY item.quantidade DESC";
 
         return em.createQuery(jpql, RelatorioDeVendasVo.class).getResultList();
     }
 
+    public Pedido buscarPedidoComCliente(Long id) {
+        return em.createQuery("SELECT p FROM Pedido p JOIN FETCH p.cliente WHERE p.id = :id", Pedido.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
 
 
 }
